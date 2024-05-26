@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: "postgres:13-alpine"
+    volumes:
+      - postgres-shortnr:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: shortnr
+      POSTGRES_PASSWORD: root # must be changed
+    healthcheck:
+      test: pg_isready -U root -d shortner
+      interval: 10s
+      timeout: 3s
+      retries: 3
+  shortnr:
+    build:
+      context: .
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgres
+volumes:
+  postgres-shortnr:
